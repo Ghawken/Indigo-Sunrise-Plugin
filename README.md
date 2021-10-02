@@ -1,14 +1,31 @@
-Indigo SunRise Device Plugin
+# Indigo SunRise Device Plugin
 
 A plugin device to more easily create Sunrise type alarm clocks/devices
 
 Essentially only runs when device is turned on, and then once finished nothing running
 
-Install
+### Why?
+
+Well I found it very hard to time schedules/timers with brightness and then run other devices.  
+Have multiple action groups some increasing brightness of single device by 5% every 20 seconds, another action group run this.
+Still very hard to know when it will get to full brightness to escalate.
+This plugin allows perfectly timed light brightness, and then more lights/other lights and then action group.
+
+My usage will be to:
+
+Increase brightness of RGB lights to 100% - doing this over 10 minutes slowly
+Then increase brightness of bedside lamp from 0 -20%
+and then:
+Turn Sonos radio on 
+
+Hopefully by then already woken by the rising light levels.
+
+
+## Install
 
 Create a new Sunrise Device
 
-Select
+### Select
 
 
 Percent: Percentage to keep increasing brightness to
