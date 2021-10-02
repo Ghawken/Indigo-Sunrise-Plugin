@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<Devices>
+ <Device type="relay" id="sunriseDevice" >
+        <Name>SunRise Device</Name>
+        <ConfigUI>
+            <SupportURL></SupportURL>
+      <Field id="example133" type="label" fontSize="small" fontColor="black" >
+        <Label>
+          Please select devices below in order than will start turning
+          on/increasing in brightness
+          or an Action Group to action at a set brightness
+        </Label>
+      </Field>
+
+          <Field id="percent1" type="textfield">
+            <Label>Percent:</Label>
+        </Field>
+          <Field id="seconds1" type="textfield">
+            <Label>Seconds:</Label>
+        </Field>
+        <Field id="dimmerDevice1" type="list" rows="12" >
+            <Label>Dimmers:</Label>
+            <List class="indigo.devices" filter="indigo.dimmer"/>
+        </Field>
+        <Field id="actionGroup1" type="menu">
+            <Label>Action Group:</Label>
+            <List class="indigo.actionGroups" filter=""/>
+        </Field>
+
+        <Field id='show10dev' type='checkbox' defaultValue='false'>
+              <Label>Show more</Label>
+        </Field>
+
+          <Field id="percent2" type="textfield" visibleBindingId='show10dev'  visibleBindingValue='true'>>
+            <Label>Percent:</Label>
+        </Field>
+          <Field id="seconds2" type="textfield" visibleBindingId='show10dev'  visibleBindingValue='true'>
+            <Label>Seconds:</Label>
+        </Field>
+        <Field id="dimmerDevice2" type="list" visibleBindingId='show10dev' rows="12" visibleBindingValue='true'>
+            <Label>Dimmers:</Label>
+            <List class="indigo.devices" filter="indigo.dimmer"/>
+        </Field>
+        <Field id="actionGroup2" type="menu" visibleBindingId='show10dev'  visibleBindingValue='true'>
+            <Label>Action Group:</Label>
+            <List class="indigo.actionGroups" filter=""/>
+        </Field>
+
+          <Field id='show11dev' type='checkbox' defaultValue='false' visibleBindingId='show10dev'  visibleBindingValue='true'>
+              <Label>Show more</Label>
+        </Field>
+
+          <Field id="percent3" type="textfield" visibleBindingId='show11dev'  visibleBindingValue='true'>>
+            <Label>Percent:</Label>
+        </Field>
+          <Field id="seconds3" type="textfield" visibleBindingId='show11dev'  visibleBindingValue='true'>
+            <Label>Seconds:</Label>
+        </Field>
+        <Field id="dimmerDevice3" type="list" visibleBindingId='show11dev' rows="12" visibleBindingValue='true'>
+            <Label>Dimmers:</Label>
+            <List class="indigo.devices" filter="indigo.dimmer"/>
+        </Field>
+        <Field id="actionGroup3" type="menu" visibleBindingId='show11dev'  visibleBindingValue='true'>
+            <Label>Action Group:</Label>
+            <List class="indigo.actionGroups" filter=""/>
+        </Field>
+          <Field id='show12dev' type='checkbox' defaultValue='false' visibleBindingId='show11dev'  visibleBindingValue='true'>>
+              <Label>Show more</Label>
+        </Field>
+                    <Field id="percent4" type="textfield" visibleBindingId='show12dev'  visibleBindingValue='true'>>
+            <Label>Percent:</Label>
+        </Field>
+          <Field id="seconds4" type="textfield" visibleBindingId='show12dev'  visibleBindingValue='true'>
+            <Label>Seconds:</Label>
+        </Field>
+        <Field id="dimmerDevice4" type="list" visibleBindingId='show12dev' rows="12" visibleBindingValue='true'>
+            <Label>Dimmers:</Label>
+            <List class="indigo.devices" filter="indigo.dimmer"/>
+        </Field>
+        <Field id="actionGroup4" type="menu" visibleBindingId='show12dev'  visibleBindingValue='true'>
+            <Label>Action Group:</Label>
+            <List class="indigo.actionGroups" filter=""/>
+        </Field>
+        </ConfigUI>
+
+        <States>
+            <State id="status">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Status of Device</TriggerLabel>
+                <ControlPageLabel>Status of Device</ControlPageLabel>
+            </State>
+            <State id="current_Percentage">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Percent complete</TriggerLabel>
+                <ControlPageLabel>Percent complete</ControlPageLabel>
+            </State>
+            <State id="lengthofSunrise">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>length of Sunrise in seconds</TriggerLabel>
+                <ControlPageLabel>length of Sunrise</ControlPageLabel>
+            </State>
+            <State id="secondsRunning">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Seconds Running seconds</TriggerLabel>
+                <ControlPageLabel>Seconds Running seconds</ControlPageLabel>
+            </State>
+   <UiDisplayStateId>status</UiDisplayStateId>
+        </States>
+</Device>
+
+</Devices>
