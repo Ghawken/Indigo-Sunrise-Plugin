@@ -33,6 +33,7 @@ class Plugin(indigo.PluginBase):
             self.logLevel = int(self.pluginPrefs[u"logLevel"])
         except:
             self.logLevel = logging.INFO
+
         self.indigo_log_handler.setLevel(self.logLevel)
         self.logger.threaddebug(u"logLevel = " + str(self.logLevel))
 
@@ -98,15 +99,13 @@ class Plugin(indigo.PluginBase):
 
 
     def closedPrefsConfigUi(self, valuesDict, userCancelled):
-
-        self.debugLog(u"closedPrefsConfigUi() method called.")
-
-        if userCancelled:
-            self.debugLog(u"User prefs dialog cancelled.")
-
         if not userCancelled:
-
-            self.debugLog(u"User prefs saved.")
+            try:
+                self.logLevel = int(valuesDict[u"logLevel"])
+            except:
+                self.logLevel = logging.INFO
+            self.indigo_log_handler.setLevel(self.logLevel)
+            self.logger.debug(u"logLevel = " + str(self.logLevel))
 
 
         return True
@@ -155,13 +154,13 @@ class Plugin(indigo.PluginBase):
 
     def validatePrefsConfigUi(self, valuesDict):
 
-        self.debugLog(u"validatePrefsConfigUi() method called.")
+        self.logger.debug(u"validatePrefsConfigUi called")
+        errorDict = indigo.Dict()
 
-        error_msg_dict = indigo.Dict()
+        if len(errorDict) > 0:
+            return (False, valuesDict, errorDict)
 
-        # self.errorLog(u"Plugin configuration error: ")
-
-        return True, valuesDict
+        return (True, valuesDict)
 
 
 
