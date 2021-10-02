@@ -72,19 +72,39 @@ class Plugin(indigo.PluginBase):
 
     def set_turnOn(self,action,device):
         self.logger.debug(u"set Turn On Starting....")
+
+        ## need to thread here otherwise won't respond
+        stoppedThread = self.stopSceneThread(device)
+
+        if stoppedThread:
+            self.logger.debug(u"Thread was running... Restarting..")
+            time.sleep(5)
+
         device.updateStateOnServer('status', value="Running")
         device.updateStateOnServer('onOffState', value=True, uiValue='Running')
-        ## need to thread here otherwise won't respond
-        sceneThreadActive = False
-        for gThread in self.deviceThreads:
-            if gThread.indigoDevice.name == device.name:
-                sceneThreadActive = True
 
-        if sceneThreadActive:
-            self.logger.debug(u"Thread already running... Turn off and then on to restart")
-        else:
-            devicesceneThread = SunriseDeviceThread(device, self.logger, action)
-            self.deviceThreads.append(devicesceneThread)
+        devicesceneThread = SunriseDeviceThread(device, self.logger, action)
+        self.deviceThreads.append(devicesceneThread)
+        self.logger.info("Starting SunRise Device: "+unicode(device.name))
+
+    def stopSceneThread(self, device):
+        indigoDevice = indigo.devices[device.id]
+        deviceSceneThread = None
+        stoppedThread = False
+        for gThread in self.deviceThreads:
+            if gThread.indigoDevice.name == indigoDevice.name:
+                deviceSceneThread = gThread
+
+        if deviceSceneThread is not None:
+            self.debugLog("...stopSceneThread Stopping scene thread: " + indigoDevice.name)
+            deviceSceneThread.stopDevConcurrentThread()
+            self.deviceThreads.remove(deviceSceneThread)
+            deviceSceneThread = None
+            stoppedThread = True
+            # any remaining scene workItems will be skipped if an activeScene Thread isn't found for the device
+
+        self.debugLog("...stopSceneThread Total remaining scene threads - " + str(len(self.deviceThreads)))
+        return stoppedThread
 
     def set_turnOff(self,action,device):
         self.logger.debug(u"Set Turn Off Starting....l")
@@ -290,14 +310,14 @@ class SunriseDeviceThread(threading.Thread):
                         self.logger.debug("Percentage None so ending.")
                         break
                     oldpercentage = float(percentage[x])
+                    individualtiming = float(float(float(second[x]) / (float(percentage[x])))) / 2  ## make 0.5..%
                     while (step <= float(percentage[x])) and not self.stopThread:
                         ## needs to take seconds to end
-                        individualtiming = float(float(float(second[x]) / (float(percentage[x]))))/2  ## make 0.5..%
+
                         if step != oldstep:
                             self.logger.debug("Dividing Step:"+str(x)+" into parts based on time to complete = "+unicode(second[x]+" seconds:"))
                             self.logger.debug("Individual timing second / percentage, so 0.5% = " + unicode(individualtiming) + " seconds")
                             oldstep = step
-
                         #self.logger.debug("Current time ="+unicode(current_time))
                         if t.time() > oldtime+individualtiming:
                             self.logger.debug("Current Percentage (or step)="+unicode(step)+ " % completed")
@@ -314,7 +334,7 @@ class SunriseDeviceThread(threading.Thread):
                             self.indigoDevice.updateStateOnServer('current_Percentage',value=float(step))
                             self.indigoDevice.updateStateOnServer('secondsRunning', value=int(t.time()-starttime))
                         #time.sleep(individualtiming)  ## should be == 1% percentage point.  But if huge will be issue as will hang
-                        time.sleep(0.5)
+                        time.sleep(int(individualtiming)/2)
 
                     self.logger.debug("End of Step and first percentage.. Checking next. ")
                     if actionGroup[x] != "" and not self.stopThread:  ## reached end of percentage run action group
@@ -335,6 +355,7 @@ class SunriseDeviceThread(threading.Thread):
                 self.indigoDevice.updateStateOnServer('onOffState', value=False, uiValue='Off')
                 self.indigoDevice.updateStateOnServer('current_Percentage', value=int(0))
                 self.indigoDevice.updateStateOnServer('secondsRunning', value=int(0))
+
                 return
             except:  # Do my other non-socket reading stuff here
                 self.logger.exception(
