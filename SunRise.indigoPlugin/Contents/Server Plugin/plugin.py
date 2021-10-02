@@ -290,7 +290,7 @@ class SunriseDeviceThread(threading.Thread):
                     if percentage[x]==None:
                         self.logger.debug("Percentage None so ending.")
                         break
-
+                    oldpercentage = float(percentage[x])
                     while (step <= float(percentage[x])) and not self.stopThread:
                         ## needs to take seconds to end
                         individualtiming = float(float(float(second[x]) / (float(percentage[x]))))/2  ## make 0.5..%
@@ -327,8 +327,9 @@ class SunriseDeviceThread(threading.Thread):
                     if percentage[x]=="":
                         self.logger.debug("Next Percentage None so ending.")
                         break
-
-
+                    if float(percentage[x]) < oldpercentage:
+                        self.logger.info("Error with setup of Sunrise Device, each percentage needs to increase in order to max of 100")
+                        break
                 time.sleep(0.5)
 
                 self.logger.info("End of Sunrise Device.  Turning Off")

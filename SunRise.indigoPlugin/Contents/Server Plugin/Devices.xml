@@ -11,12 +11,16 @@
           or an Action Group to action at a set brightness
         </Label>
       </Field>
-
+      <Field id="exampleb2" type="label" fontSize="large" fontColor="black" >
+        <Label>
+          Starting 0% to
+        </Label>
+      </Field>
           <Field id="percent1" type="textfield">
             <Label>Percent:</Label>
         </Field>
           <Field id="seconds1" type="textfield">
-            <Label>Seconds:</Label>
+            <Label>over Seconds:</Label>
         </Field>
         <Field id="dimmerDevice1" type="list" rows="12" >
             <Label>Dimmers:</Label>
@@ -32,10 +36,10 @@
         </Field>
 
           <Field id="percent2" type="textfield" visibleBindingId='show10dev'  visibleBindingValue='true'>>
-            <Label>Percent:</Label>
+            <Label>to Percent:</Label>
         </Field>
           <Field id="seconds2" type="textfield" visibleBindingId='show10dev'  visibleBindingValue='true'>
-            <Label>Seconds:</Label>
+            <Label>over Seconds:</Label>
         </Field>
         <Field id="dimmerDevice2" type="list" visibleBindingId='show10dev' rows="12" visibleBindingValue='true'>
             <Label>Dimmers:</Label>
@@ -51,10 +55,10 @@
         </Field>
 
           <Field id="percent3" type="textfield" visibleBindingId='show11dev'  visibleBindingValue='true'>>
-            <Label>Percent:</Label>
+            <Label>to Percent:</Label>
         </Field>
           <Field id="seconds3" type="textfield" visibleBindingId='show11dev'  visibleBindingValue='true'>
-            <Label>Seconds:</Label>
+            <Label>over Seconds:</Label>
         </Field>
         <Field id="dimmerDevice3" type="list" visibleBindingId='show11dev' rows="12" visibleBindingValue='true'>
             <Label>Dimmers:</Label>
@@ -68,10 +72,10 @@
               <Label>Show more</Label>
         </Field>
                     <Field id="percent4" type="textfield" visibleBindingId='show12dev'  visibleBindingValue='true'>>
-            <Label>Percent:</Label>
+            <Label>to Percent:</Label>
         </Field>
           <Field id="seconds4" type="textfield" visibleBindingId='show12dev'  visibleBindingValue='true'>
-            <Label>Seconds:</Label>
+            <Label>over Seconds:</Label>
         </Field>
         <Field id="dimmerDevice4" type="list" visibleBindingId='show12dev' rows="12" visibleBindingValue='true'>
             <Label>Dimmers:</Label>
