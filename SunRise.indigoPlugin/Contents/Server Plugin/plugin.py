@@ -416,10 +416,11 @@ class SunriseDeviceThread(threading.Thread):
                 time.sleep(0.5)
 
                 self.logger.info("End of Sunrise Device.  ")
-                self.indigoDevice.updateStateOnServer('onOffState', value=False, uiValue='Off')
+                self.indigoDevice.updateStateOnServer('onOffState', value=False, uiValue='Completed.')
                 self.indigoDevice.updateStateOnServer('current_Percentage', value=int(0))
                 self.indigoDevice.updateStateOnServer('secondsRunning', value=int(0))
-
+                self.indigoDevice.updateStateOnServer('Total_Percentage', value=0)
+                self.indigoDevice.updateStateOnServer('Total_Percentage_whole', value=int(0))
                 return
             except:  # Do my other non-socket reading stuff here
                 self.logger.exception(
