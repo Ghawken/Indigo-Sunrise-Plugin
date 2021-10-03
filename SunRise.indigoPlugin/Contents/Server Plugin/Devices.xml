@@ -16,6 +16,10 @@
           Starting 0% to
         </Label>
       </Field>
+            <Field id="startpercent1" type="textfield" hidden="true" defaultValue="1">
+            <Label>Start Percent:</Label>
+        </Field>
+
           <Field id="percent1" type="textfield">
             <Label>Percent:</Label>
         </Field>
@@ -26,16 +30,20 @@
             <Label>Dimmers:</Label>
             <List class="indigo.devices" filter="indigo.dimmer"/>
         </Field>
-        <Field id="actionGroup1" type="menu">
+        <Field id="actionGroup1" type="menu" defaultValue="0">
             <Label>Action Group:</Label>
-            <List class="indigo.actionGroups" filter=""/>
+            <List class="self" filter="" method="actionsToList" dynamicReload="true"/>
+            <CallbackMethod>menuChanged</CallbackMethod>
         </Field>
 
         <Field id='show10dev' type='checkbox' defaultValue='false'>
               <Label>Show more</Label>
         </Field>
 
-          <Field id="percent2" type="textfield" visibleBindingId='show10dev'  visibleBindingValue='true'>>
+            <Field id="startpercent2" type="textfield" visibleBindingId='show10dev'  visibleBindingValue='true'>
+            <Label>Start Percent:</Label>
+        </Field>
+          <Field id="percent2" type="textfield" visibleBindingId='show10dev'  visibleBindingValue='true'>
             <Label>to Percent:</Label>
         </Field>
           <Field id="seconds2" type="textfield" visibleBindingId='show10dev'  visibleBindingValue='true'>
@@ -45,15 +53,18 @@
             <Label>Dimmers:</Label>
             <List class="indigo.devices" filter="indigo.dimmer"/>
         </Field>
-        <Field id="actionGroup2" type="menu" visibleBindingId='show10dev'  visibleBindingValue='true'>
+        <Field id="actionGroup2" type="menu" visibleBindingId='show10dev'  visibleBindingValue='true' defaultValue="0">
             <Label>Action Group:</Label>
-            <List class="indigo.actionGroups" filter=""/>
+            <List class="self" filter="" method="actionsToList" dynamicReload="true"/>
+            <CallbackMethod>menuChanged</CallbackMethod>
         </Field>
 
           <Field id='show11dev' type='checkbox' defaultValue='false' visibleBindingId='show10dev'  visibleBindingValue='true'>
               <Label>Show more</Label>
         </Field>
-
+            <Field id="startpercent3" type="textfield" visibleBindingId='show11dev'  visibleBindingValue='true'>
+            <Label>Start Percent:</Label>
+        </Field>
           <Field id="percent3" type="textfield" visibleBindingId='show11dev'  visibleBindingValue='true'>>
             <Label>to Percent:</Label>
         </Field>
@@ -64,14 +75,18 @@
             <Label>Dimmers:</Label>
             <List class="indigo.devices" filter="indigo.dimmer"/>
         </Field>
-        <Field id="actionGroup3" type="menu" visibleBindingId='show11dev'  visibleBindingValue='true'>
+        <Field id="actionGroup3" type="menu" visibleBindingId='show11dev'  visibleBindingValue='true' defaultValue="0">
             <Label>Action Group:</Label>
-            <List class="indigo.actionGroups" filter=""/>
+            <List class="self" filter="" method="actionsToList" dynamicReload="true"/>
+            <CallbackMethod>menuChanged</CallbackMethod>
         </Field>
           <Field id='show12dev' type='checkbox' defaultValue='false' visibleBindingId='show11dev'  visibleBindingValue='true'>>
               <Label>Show more</Label>
         </Field>
-                    <Field id="percent4" type="textfield" visibleBindingId='show12dev'  visibleBindingValue='true'>>
+            <Field id="startpercent4" type="textfield" visibleBindingId='show12dev'  visibleBindingValue='true'>
+            <Label>Start Percent:</Label>
+        </Field>
+            <Field id="percent4" type="textfield" visibleBindingId='show12dev'  visibleBindingValue='true'>>
             <Label>to Percent:</Label>
         </Field>
           <Field id="seconds4" type="textfield" visibleBindingId='show12dev'  visibleBindingValue='true'>
@@ -81,9 +96,10 @@
             <Label>Dimmers:</Label>
             <List class="indigo.devices" filter="indigo.dimmer"/>
         </Field>
-        <Field id="actionGroup4" type="menu" visibleBindingId='show12dev'  visibleBindingValue='true'>
+        <Field id="actionGroup4" type="menu" visibleBindingId='show12dev'  visibleBindingValue='true' defaultValue="0">
             <Label>Action Group:</Label>
-            <List class="indigo.actionGroups" filter=""/>
+            <List class="self" filter="" method="actionsToList" dynamicReload="true"/>
+            <CallbackMethod>menuChanged</CallbackMethod>
         </Field>
         </ConfigUI>
 
@@ -95,8 +111,18 @@
             </State>
             <State id="current_Percentage">
                 <ValueType>Number</ValueType>
-                <TriggerLabel>Percent complete</TriggerLabel>
-                <ControlPageLabel>Percent complete</ControlPageLabel>
+                <TriggerLabel>Percent level currently</TriggerLabel>
+                <ControlPageLabel>Percent level currently</ControlPageLabel>
+            </State>
+            <State id="Total_Percentage">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Total percent complete</TriggerLabel>
+                <ControlPageLabel>Total percent complete</ControlPageLabel>
+            </State>
+            <State id="Total_Percentage_whole">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Total percent Whole Number</TriggerLabel>
+                <ControlPageLabel>Total percent Whole Number</ControlPageLabel>
             </State>
             <State id="lengthofSunrise">
                 <ValueType>Number</ValueType>
@@ -107,6 +133,11 @@
                 <ValueType>Number</ValueType>
                 <TriggerLabel>Seconds Running seconds</TriggerLabel>
                 <ControlPageLabel>Seconds Running seconds</ControlPageLabel>
+            </State>
+            <State id="devicesDimming">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Curent devices Dimming</TriggerLabel>
+                <ControlPageLabel>Current devices Dimming</ControlPageLabel>
             </State>
    <UiDisplayStateId>status</UiDisplayStateId>
         </States>

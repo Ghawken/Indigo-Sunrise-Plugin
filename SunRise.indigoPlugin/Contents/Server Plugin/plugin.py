@@ -107,16 +107,34 @@ class Plugin(indigo.PluginBase):
         return stoppedThread
 
     def set_turnOff(self,action,device):
-        self.logger.debug(u"Set Turn Off Starting....l")
-        device.updateStateOnServer('status',value="Turning off")
-        device.updateStateOnServer('onOffState', value=False, uiValue='Off')
-        for gThread in self.deviceThreads:
-            if gThread.indigoDevice.name == device.name:
-                gThread.stopDevConcurrentThread()
-                self.deviceThreads.remove(gThread)
-                indigo.server.log("Stopping device thread: " + device.name)
+        try:
+            self.logger.debug(u"Set Turn Off Starting....l")
+            device.updateStateOnServer('status',value="Turning off")
+            device.updateStateOnServer('onOffState', value=False, uiValue='Off')
+            for gThread in self.deviceThreads:
+                if gThread.indigoDevice.name == device.name:
+                    gThread.stopDevConcurrentThread()
+                    self.deviceThreads.remove(gThread)
+                    indigo.server.log("Stopping device thread: " + device.name)
 
-
+            dimmerDevice = []
+            x = 1
+            while (x <= 4):
+                dimmerDevice.append([device.pluginProps.get('dimmerDevice' + str(x), None)])
+                x = x + 1
+            x = 0
+            while (x <3):
+                for dimmerlist in dimmerDevice[x]:
+                    for dimmers in dimmerlist:
+                        self.logger.debug(  "Setting current Dimmer: to Off 0% brightness")
+                        try:
+                            #iDev = indigo.devices[int(dimmers)]
+                            indigo.device.turnOff(int(dimmers))
+                        except:
+                            self.logger.exception("Exception setting Turn Off for this dimmer device?")
+                x =x +1
+        except:
+            self.logger.exception("Error in set Turn off")
 
     def closedPrefsConfigUi(self, valuesDict, userCancelled):
         if not userCancelled:
@@ -140,6 +158,20 @@ class Plugin(indigo.PluginBase):
             self.deviceList.append(dev.id)
         except Exception as ex:
             self.errorLog("Exception hit in deviceStartComm - " + str(ex))
+
+        if dev.deviceTypeId == 'sunriseDevice':
+            stateList = [
+                {'key': 'status', 'value': 'Off', 'uiValue': 'Off'},
+                {'key': 'current_Percentage', 'value': 0},
+                {'key': 'Total_Percentage', 'value': 0},
+                {'key': 'Total_Percentage_whole', 'value': 0},
+                {'key': 'secondsRunning', 'value': 0},
+                {'key': 'devicesDimming', 'value': ''}
+            ]
+
+            # self.logger.debug(unicode(stateList))
+            dev.updateStatesOnServer(stateList)
+
 
     # Shut 'em down.
     def deviceStopComm(self, device):
@@ -241,7 +273,18 @@ class Plugin(indigo.PluginBase):
 
                  self.debugLog(u"    Disabled: {0}".format(dev.name))
 
+    def actionsToList(self, filter="", valuesDict=None, typeId="", targetId=0):
+        self.logger.debug(u"actionstoList run")
+        # Set a default with id 0
+        # Iterates through the action list
 
+        actionList = [("0", '-- None --')]
+        for action in indigo.actionGroups:
+             actionList.append((action.id, action.name))
+        return actionList
+
+    def menuChanged(self, valuesDict, typeId, devId):
+        return valuesDict
 
     def refreshDataForDevAction(self, valuesDict):
         """
@@ -276,12 +319,14 @@ class SunriseDeviceThread(threading.Thread):
 
             dimmerDevice = []
             percentage = []
+            startpercent = []
             actionGroup = []
             second = []
 
             x = 1
             while (x <= 4):
                 dimmerDevice.append([ self.indigoDevice.pluginProps.get('dimmerDevice'+str(x), None) ] )
+                startpercent.append(self.indigoDevice.pluginProps.get('startpercent' + str(x), None) )
                 percentage.append( self.indigoDevice.pluginProps.get('percent' + str(x), None) )
                 actionGroup.append( self.indigoDevice.pluginProps.get('actionGroup' + str(x), None) )
                 second.append( self.indigoDevice.pluginProps.get('seconds' + str(x), None) )
@@ -291,53 +336,74 @@ class SunriseDeviceThread(threading.Thread):
             for seconds in second:
                 if seconds !="":
                     totaltime = int(seconds)+totaltime
+
             self.logger.debug("Total length of Sunrise device ="+unicode(totaltime)+" seconds")
             self.indigoDevice.updateStateOnServer('lengthofSunrise', value=int(totaltime))
+            self.indigoDevice.updateStateOnServer('Total_Percentage', value=int(0))
             self.indigoDevice.updateStateOnServer('secondsRunning', value=int(0))
+
+            starttime = t.time()
+
             try:
                 self.logger.debug(unicode(dimmerDevice))
-
                 ## Steps
                 x = 0  ## this is number of data points currently == 4
-                startpercentage = float(0.0)
 
-                step = float(0.5)  ## this is out of 100...
+                step = float(0)  ## this is out of 100...
                 oldstep = 0
                 oldtime = t.time()
                 starttime = t.time()
                 while (x <=3) and not self.stopThread:
-                    if percentage[x]==None:
+                    if percentage[x]==None or startpercent[x]==None:
                         self.logger.debug("Percentage None so ending.")
                         break
-                    oldpercentage = float(percentage[x])
-                    individualtiming = float(float(float(second[x]) / (float(percentage[x])))) / 2  ## make 0.5..%
+                    listdevices = ""
+                    for dimmerlist in dimmerDevice[x]:
+                        for dimmers in dimmerlist:
+                            iDev = indigo.devices[int(dimmers)]
+                            listdevices = iDev.name + ","+ listdevices
+                    self.indigoDevice.updateStateOnServer('devicesDimming', value=str(listdevices))
+
+                    individualtiming = float(float(float(second[x]) / (float(percentage[x])))) ## no point being 0.5 change to 1/ 2  ## make 0.5..%
+                    startpercentage = float(startpercent[x])
+                    step = float(startpercent[x])
+
                     while (step <= float(percentage[x])) and not self.stopThread:
                         ## needs to take seconds to end
 
                         if step != oldstep:
-                            self.logger.debug("Dividing Step:"+str(x)+" into parts based on time to complete = "+unicode(second[x]+" seconds:"))
-                            self.logger.debug("Individual timing second / percentage, so 0.5% = " + unicode(individualtiming) + " seconds")
+                            self.logger.debug("Dividing Step:"+str(x+1)+" into parts based on time to complete = "+unicode(second[x]+" seconds:"))
+                            self.logger.debug("Individual timing second / percentage, so 1% = " + unicode(individualtiming) + " seconds")
                             oldstep = step
                         #self.logger.debug("Current time ="+unicode(current_time))
                         if t.time() > oldtime+individualtiming:
                             self.logger.debug("Current Percentage (or step)="+unicode(step)+ " % completed")
                             oldtime = t.time()
+
+                            currenttime = t.time()-starttime
+                            percentagecomplete = float(currenttime/totaltime)*100
+                            self.indigoDevice.updateStateOnServer('Total_Percentage', value=format(float(percentagecomplete),".2f"))
+                            self.indigoDevice.updateStateOnServer('Total_Percentage_whole',value=int(percentagecomplete))
+
                             for dimmerlist in dimmerDevice[x]:
+
                                 for dimmers in dimmerlist:
+
                                     self.logger.debug("Setting current Dimmer: "+unicode(dimmers)+" to "+unicode(step)+" % brightness" )
                                     try:
                                         iDev = indigo.devices[int(dimmers)]
+
                                         indigo.dimmer.setBrightness( iDev,value=int(step) )
                                     except:
                                         self.logger.exception("Exception setting brightness for this dimmer device?")
-                            step = step + 0.5
+                            step = step + 1
                             self.indigoDevice.updateStateOnServer('current_Percentage',value=float(step))
                             self.indigoDevice.updateStateOnServer('secondsRunning', value=int(t.time()-starttime))
                         #time.sleep(individualtiming)  ## should be == 1% percentage point.  But if huge will be issue as will hang
                         time.sleep(int(individualtiming)/2)
 
                     self.logger.debug("End of Step and first percentage.. Checking next. ")
-                    if actionGroup[x] != "" and not self.stopThread:  ## reached end of percentage run action group
+                    if (actionGroup[x] != "" and actionGroup[x] != "0") and not self.stopThread:  ## reached end of percentage run action group
                         self.logger.debug("Running Action Group "+unicode(actionGroup[x])+" reached percent:" + unicode(step) + " %")
                         indigo.actionGroup.execute( int(actionGroup[x]) )
                     ## increment
@@ -346,12 +412,10 @@ class SunriseDeviceThread(threading.Thread):
                     if percentage[x]=="":
                         self.logger.debug("Next Percentage None so ending.")
                         break
-                    if float(percentage[x]) < oldpercentage:
-                        self.logger.info("Error with setup of Sunrise Device, each percentage needs to increase in order to max of 100")
-                        break
+
                 time.sleep(0.5)
 
-                self.logger.info("End of Sunrise Device.  Turning Off")
+                self.logger.info("End of Sunrise Device.  ")
                 self.indigoDevice.updateStateOnServer('onOffState', value=False, uiValue='Off')
                 self.indigoDevice.updateStateOnServer('current_Percentage', value=int(0))
                 self.indigoDevice.updateStateOnServer('secondsRunning', value=int(0))
