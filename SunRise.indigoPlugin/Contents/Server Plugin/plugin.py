@@ -78,7 +78,7 @@ class Plugin(indigo.PluginBase):
 
         if stoppedThread:
             self.logger.debug(u"Thread was running... Restarting..")
-            time.sleep(5)
+            time.sleep(2)
 
         device.updateStateOnServer('status', value="Running")
         device.updateStateOnServer('onOffState', value=True, uiValue='Running')
@@ -249,7 +249,7 @@ class Plugin(indigo.PluginBase):
                     self.refreshDataForDev(dev)
 
             else:
-                indigo.server.log(u"No Enphase Client devices have been created.")
+                indigo.server.log(u"No  Client devices have been created.")
 
             return True
 
