@@ -24,8 +24,15 @@ and then:
 run actionGroup to:
 Turn Sonos radio on 
 
+At completion of the Sunrise event all devices are left unchanged.  If you would prefer them to turn off, select a Action Group to do so after completion.
+
 Hopefully by then already woken by the rising light levels....
 
+Other:
+
+Sunrise Alarm - turning on kids lights,  slowly one by one until perhaps they are awake.  
+This plugin allows this easily to be a single Indigo Relay device, actionable by a turn on/turn off, or Alexa very simply.
+Alexa - please turn on kids alarm etc..
 
 ## Install
 
@@ -37,7 +44,6 @@ Allows four sequential events currently, can increase to further.
 Each group allows mulitple dimmer devices to be selected, and once the end Percent reached an optional action group to be run.
 
 
-
 Percent: Percentage to keep increasing brightness to for this set of dimmerDevices.
 Seconds:  Over what period of time in seconds will this happen
 Dimmer Devices: List - can select multiple, of dimmers to slowly increase brightness based on above
@@ -46,6 +52,24 @@ Action Group: Optional/Can be left blank:  To Run once maximum Percent reached
 &
 Next set of devices as per above.
 Up to x4 sets.
+
+eg.
+![https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/Images/SunRiseDevice.png?raw=true](https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/Images/SunRiseDevice.png?raw=true)
+
+
+## Device Status
+
+The Sunrise Device always has a number of status to keep you updated, display in Control Page
+
+![https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/Images/SunRiseStatus.png?raw=true](https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/Images/SunRiseStatus.png?raw=true)
+
+Total_Percent: Current running Sunrise total percent of entire event completed
+Total_Percent_Whole: As above but rounded to zero decimals for Control page use
+current_Percent:  The current brightness of current set of dimmer devices
+devicesDimming: Names of current devices actioning
+lengthofSunrise:  Total length of sunrise event in seconds  (calculated on first run)
+secondsRunning:  How long the current Sunrise has been running
+status: Running, Off etc.
 
 
 ## Example Usage:
@@ -75,3 +99,8 @@ Hopefully following along, 2nd set will start brightness of main room from 50% -
 Then will go from 80% -100% over 100 seconds, there are no dimmerDevices selected so will not change any brightness.
 But once 100% reached will execute actionGroup and turn on Radio.
 
+
+## Additional
+
+There is very little checking of the device setup, given multitude of options.  
+Would suggest test turning on and making sure behaves as you would like before completion.
