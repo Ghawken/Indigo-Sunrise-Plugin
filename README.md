@@ -1,6 +1,8 @@
 # Indigo SunRise Device Plugin
 
-![https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/SunRise%20Icon/Sunrise+100.png?raw=true](https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/SunRise%20Icon/Sunrise+100.png?raw=true)
+![https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/Images/SunRiseIcon.gif?raw=true](https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/Images/SunRiseIcon.gif?raw=true)
+
+![https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/SunRise%20Icon/icon_small.png?raw=true](https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/SunRise%20Icon/icon_small.png?raw=true)
 
 
 
@@ -106,6 +108,9 @@ There is very little checking of the device setup, given multitude of options.
 Would suggest test turning on and making sure behaves as you would like before completion.
 
 SunRise Icon:  To use in control pages, showing how along the sunrise device/event is.
+
+![https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/Images/SunRiseIcon.gif?raw=true](https://github.com/Ghawken/Indigo-Sunrise-Plugin/blob/master/Resources/Images/SunRiseIcon.gif?raw=true)
+
 
 Here:
 https://github.com/Ghawken/Indigo-Sunrise-Plugin/tree/master/Resources/SunRise%20Icon
