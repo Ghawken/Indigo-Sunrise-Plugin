@@ -104,3 +104,8 @@ But once 100% reached will execute actionGroup and turn on Radio.
 
 There is very little checking of the device setup, given multitude of options.  
 Would suggest test turning on and making sure behaves as you would like before completion.
+
+SunRise Icon:  To use in control pages, showing how along the sunrise device/event is.
+
+Here:
+https://github.com/Ghawken/Indigo-Sunrise-Plugin/tree/master/Resources/SunRise%20Icon
