@@ -409,9 +409,7 @@ class SunriseDeviceThread(threading.Thread):
                     ## increment
                     x= x +1
                     ## check next percentage to make sure exists.
-                    if percentage[x]=="":
-                        self.logger.debug("Next Percentage None so ending.")
-                        break
+
 
                 time.sleep(0.5)
 
