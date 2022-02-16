@@ -116,7 +116,7 @@ class Plugin(indigo.PluginBase):
                     gThread.stopDevConcurrentThread()
                     self.deviceThreads.remove(gThread)
                     indigo.server.log("Stopping device thread: " + device.name)
-
+#fix
             dimmerDevice = []
             actionGroupOff = device.pluginProps.get('actionGroupOFF', None)
             x = 1
