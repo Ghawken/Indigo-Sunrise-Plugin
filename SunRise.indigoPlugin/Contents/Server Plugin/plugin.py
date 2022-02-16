@@ -118,21 +118,25 @@ class Plugin(indigo.PluginBase):
                     indigo.server.log("Stopping device thread: " + device.name)
 
             dimmerDevice = []
+            actionGroupOff = device.pluginProps.get('actionGroupOFF', None)
             x = 1
             while (x <= 4):
-                dimmerDevice.append([device.pluginProps.get('dimmerDevice' + str(x), None)])
+                for dimmers in device.pluginProps.get('dimmerDevice' + str(x), None):
+                    dimmerDevice.append(dimmers)
                 x = x + 1
-            x = 0
-            while (x <3):
-                for dimmerlist in dimmerDevice[x]:
-                    for dimmers in dimmerlist:
-                        self.logger.debug(  "Setting current Dimmer: to Off 0% brightness")
-                        try:
-                            #iDev = indigo.devices[int(dimmers)]
-                            indigo.device.turnOff(int(dimmers))
-                        except:
-                            self.logger.exception("Exception setting Turn Off for this dimmer device?")
-                x =x +1
+            self.logger.debug("DimmerDevice List:"+str(dimmerDevice))
+
+            for dimmers in dimmerDevice:
+                self.logger.debug(  "Setting current Dimmer:"+str(dimmers)+" to Off 0% brightness")
+                try:
+                    #iDev = indigo.devices[int(dimmers)]
+                    indigo.device.turnOff(int(dimmers))
+                except:
+                    self.logger.exception("Exception setting Turn Off for this dimmer device?")
+            if (actionGroupOff != "" and actionGroupOff != "0") :  ## reached end of percentage run action group
+                self.logger.debug(
+                    "Running Action Group OFF " + unicode(actionGroupOff) )
+                indigo.actionGroup.execute(int(actionGroupOff))
         except:
             self.logger.exception("Error in set Turn off")
 

@@ -4,13 +4,24 @@
         <Name>SunRise Device</Name>
         <ConfigUI>
             <SupportURL></SupportURL>
-      <Field id="example133" type="label" fontSize="small" fontColor="black" >
+         <Field id="space0a0" type="label" fontColor="black" >
+    <Label>Setup Sunrise Device</Label>
+  </Field>
+            <Field id="sep755ab" type="separator"/>
+            <Field id="example133" type="label" fontSize="small" fontColor="black" >
         <Label>
           Please select devices below in order than will start turning
           on/increasing in brightness
-          or an Action Group to action at a set brightness
+          and/or an Action Group to action at a set brightness end of this cycle
+
+          Show more checkbox continues up to 4 cycles of percentage brightness and/or
+          Action groups to be run.
+
+          These will all run one after another until complete.
         </Label>
       </Field>
+         <Field id="sep755ac" type="separator"/>
+
       <Field id="exampleb2" type="label" fontSize="large" fontColor="black" >
         <Label>
           Starting 0% to
@@ -35,6 +46,19 @@
             <List class="self" filter="" method="actionsToList" dynamicReload="true"/>
             <CallbackMethod>menuChanged</CallbackMethod>
         </Field>
+      <Field id="sep7554" type="separator"/>
+            <Field id="example13a3" type="label" fontSize="small" fontColor="black" >
+        <Label>
+          The action Group OFF is run only when device is turned off.
+          Additionally all dimmer devices are also turned off at this time.
+        </Label>
+      </Field>
+            <Field id="actionGroupOFF" type="menu" defaultValue="0">
+            <Label>OFF Action Group:</Label>
+            <List class="self" filter="" method="actionsToList" dynamicReload="true"/>
+            <CallbackMethod>menuChanged</CallbackMethod>
+        </Field>
+              <Field id="sep755" type="separator"/>
 
         <Field id='show10dev' type='checkbox' defaultValue='false'>
               <Label>Show more</Label>
