@@ -6,11 +6,19 @@ Author: GlennNZ
 
 """
 import sys
-import datetime
+#import datetime
 import time as t
-import urllib2
-import os
-import shutil
+
+## py 2 and py3
+#from six.moves.urllib.parse import urlparse, urlencode
+#from six.moves.urllib.request import urlopen
+#from six.moves.urllib.error import HTTPError
+#import urllib2
+
+from builtins import str as text
+
+#import os
+#import shutil
 import logging
 import threading
 import time
@@ -85,7 +93,7 @@ class Plugin(indigo.PluginBase):
 
         devicesceneThread = SunriseDeviceThread(device, self.logger, action)
         self.deviceThreads.append(devicesceneThread)
-        self.logger.info("Starting SunRise Device: "+unicode(device.name))
+        self.logger.info("Starting SunRise Device: "+text(device.name))
 
     def stopSceneThread(self, device):
         indigoDevice = indigo.devices[device.id]
@@ -135,7 +143,7 @@ class Plugin(indigo.PluginBase):
                     self.logger.exception("Exception setting Turn Off for this dimmer device?")
             if (actionGroupOff != "" and actionGroupOff != "0") :  ## reached end of percentage run action group
                 self.logger.debug(
-                    "Running Action Group OFF " + unicode(actionGroupOff) )
+                    "Running Action Group OFF " + text(actionGroupOff) )
                 indigo.actionGroup.execute(int(actionGroupOff))
         except:
             self.logger.exception("Error in set Turn off")
@@ -173,7 +181,7 @@ class Plugin(indigo.PluginBase):
                 {'key': 'devicesDimming', 'value': ''}
             ]
 
-            # self.logger.debug(unicode(stateList))
+            # self.logger.debug(text(stateList))
             dev.updateStatesOnServer(stateList)
 
 
@@ -259,7 +267,7 @@ class Plugin(indigo.PluginBase):
 
         except Exception as error:
             self.errorLog(u"Error refreshing devices. Please check settings.")
-            self.errorLog(unicode(error.message))
+            self.errorLog(text(error.args))
             return False
 
     def refreshDataForDev(self, dev):
@@ -317,8 +325,8 @@ class SunriseDeviceThread(threading.Thread):
 
             # do the scene stuff
             self.logger.debug("group running - " + str(self.indigoDevice.name) + ", thread-id=" + str(self.name))
-            self.logger.debug("Action Props:"+unicode(self.actionProps))
-            self.logger.debug("Device Props:"+unicode(self.indigoDevice.pluginProps))
+            self.logger.debug("Action Props:"+text(self.actionProps))
+            self.logger.debug("Device Props:"+text(self.indigoDevice.pluginProps))
             # take a sleep based on the scene preferences
 
             dimmerDevice = []
@@ -341,7 +349,7 @@ class SunriseDeviceThread(threading.Thread):
                 if seconds !="":
                     totaltime = int(seconds)+totaltime
 
-            self.logger.debug("Total length of Sunrise device ="+unicode(totaltime)+" seconds")
+            self.logger.debug("Total length of Sunrise device ="+text(totaltime)+" seconds")
             self.indigoDevice.updateStateOnServer('lengthofSunrise', value=int(totaltime))
             self.indigoDevice.updateStateOnServer('Total_Percentage', value=int(0))
             self.indigoDevice.updateStateOnServer('secondsRunning', value=int(0))
@@ -349,7 +357,7 @@ class SunriseDeviceThread(threading.Thread):
             starttime = t.time()
 
             try:
-                self.logger.debug(unicode(dimmerDevice))
+                self.logger.debug(text(dimmerDevice))
                 ## Steps
                 x = 0  ## this is number of data points currently == 4
 
@@ -359,6 +367,9 @@ class SunriseDeviceThread(threading.Thread):
                 starttime = t.time()
                 while (x <=3) and not self.stopThread:
                     if percentage[x]==None or startpercent[x]==None:
+                        self.logger.debug("Percentage None so ending.")
+                        break
+                    if percentage[x] == "" or startpercent[x] == "":
                         self.logger.debug("Percentage None so ending.")
                         break
                     listdevices = ""
@@ -376,12 +387,12 @@ class SunriseDeviceThread(threading.Thread):
                         ## needs to take seconds to end
 
                         if step != oldstep:
-                            self.logger.debug("Dividing Step:"+str(x+1)+" into parts based on time to complete = "+unicode(second[x]+" seconds:"))
-                            self.logger.debug("Individual timing second / percentage, so 1% = " + unicode(individualtiming) + " seconds")
+                            self.logger.debug("Dividing Step:"+str(x+1)+" into parts based on time to complete = "+text(second[x])+" seconds:")
+                            self.logger.debug("Individual timing second / percentage, so 1% = " + text(individualtiming) + " seconds")
                             oldstep = step
-                        #self.logger.debug("Current time ="+unicode(current_time))
+                        #self.logger.debug("Current time ="+text(current_time))
                         if t.time() > oldtime+individualtiming:
-                            self.logger.debug("Current Percentage (or step)="+unicode(step)+ " % completed")
+                            self.logger.debug("Current Percentage (or step)="+text(step)+ " % completed")
                             oldtime = t.time()
 
                             currenttime = t.time()-starttime
@@ -393,7 +404,7 @@ class SunriseDeviceThread(threading.Thread):
 
                                 for dimmers in dimmerlist:
 
-                                    self.logger.debug("Setting current Dimmer: "+unicode(dimmers)+" to "+unicode(step)+" % brightness" )
+                                    self.logger.debug("Setting current Dimmer: "+text(dimmers)+" to "+text(step)+" % brightness" )
                                     try:
                                         iDev = indigo.devices[int(dimmers)]
 
@@ -408,7 +419,7 @@ class SunriseDeviceThread(threading.Thread):
 
                     self.logger.debug("End of Step and first percentage.. Checking next. ")
                     if (actionGroup[x] != "" and actionGroup[x] != "0") and not self.stopThread:  ## reached end of percentage run action group
-                        self.logger.debug("Running Action Group "+unicode(actionGroup[x])+" reached percent:" + unicode(step) + " %")
+                        self.logger.debug("Running Action Group "+text(actionGroup[x])+" reached percent:" + text(step) + " %")
                         indigo.actionGroup.execute( int(actionGroup[x]) )
                     ## increment
                     x= x +1
